@@ -1,5 +1,5 @@
-import type { LinksFunction } from "remix";
-import { Links, LiveReload, Outlet, useCatch } from "remix";
+import type { LinksFunction, MetaFunction } from "remix";
+import { Links, LiveReload, Outlet, useCatch, Meta } from "remix";
 
 import globalStylesUrl from "./styles/global.css";
 import globalMediumStylesUrl from "./styles/global-medium.css";
@@ -24,19 +24,48 @@ export let links: LinksFunction = () => {
   ];
 };
 
-export default function App() {
+export let meta: MetaFunction = () => {
+  let description = `Learn Remix and laugh at the same time!`;
+  return {
+    description,
+    keywords: "Remix,jokes",
+    "twitter:image": "https://remix-jokes.lol/social.png",
+    "twitter:card": "summary_large_image",
+    "twitter:creator": "@remix_run",
+    "twitter:site": "@remix_run",
+    "twitter:title": "Remix Jokes",
+    "twitter:description": description,
+  };
+};
+
+function Document({
+  children,
+  title = `Remix: So great, it's funny!`,
+}: {
+  children: React.ReactNode;
+  title?: string;
+}) {
   return (
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <title>Remix: So great, it's funny!</title>
+        <Meta />
+        <title>{title}</title>
         <Links />
       </head>
       <body>
-        <Outlet />
+        {children}
         {process.env.NODE_ENV === "development" ? <LiveReload /> : null}
       </body>
     </html>
+  );
+}
+
+export default function App() {
+  return (
+    <Document>
+      <Outlet />
+    </Document>
   );
 }
 
